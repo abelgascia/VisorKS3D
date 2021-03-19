@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Casos subidos &middot; KeepSmiling Visor 3D</title>
+    <link rel="shortcut icon" type="image/png" href="/favicon.png"/>
+    <link rel="stylesheet" href="/panel.css">
+</head>
+<body>
+    <div class="container full">
+        <div class="header">
+            <span>Visor</span>
+            <div class="logo"></div>
+        </div>
+        <div class="content">
+            <div class="title">Casos subidos</div>
+            <div class="search-row">
+                <input type="text" value="<%= search_query %>" placeholder="Buscar por ID, nombre o número de caso" <%= search_query.length === 0 ? 'autofocus' : '' %>>
+                <button><i class="fas fa-search"></i><span>Buscar</span></button>
+                <div class="spacer"><!-- old trickeroo --></div>
+                <a class="button" href="/panel/upload"><i class="fas fa-file-upload"></i><span>Subir caso</span></a>
+            </div>
+            <% if(search_query.length > 0) { %>
+                <div class="result-box">
+                    Resultados para '<%= search_query %>' <a class="button" href="/panel"><i class="fas fa-times-circle" style="margin: 0;"></i></a>
+                </div>
+                <% } %>
+            <div class="cases-list">
+                <table>
+                    <thead>
+                        <th>#</th>
+                        <th>Estado</th>
+                        <th>Nombre</th>
+                        <th>Etapa</th>
+                        <th>Núm. caso</th>
+                        <th>Fecha</th>
+                        <th colspan="2"><i class="fas fa-search"></i></th>
+                    </thead>
+                    <tbody>
+                        <% for(let case_entry of cases) { %>
+                            <tr>
+                                <td><%= case_entry.id %></td>
+                                <td style="white-space: nowrap">
+                                    <% if(case_entry.status === "READY") { %>
+                                        <span class="success">
+                                            <i class="fas fa-check-circle"></i>
+                                            <span>Listo</span>
+                                        </span>
+                                    <% } %>
+                                    <% if(case_entry.status === "ERRORED") { %>
+                                        <div class="failure">
+                                            <i class="fas fa-times"></i>
+                                            <span>Falló</span>
+                                        </div>
+                                    <% } %>
+                                    <% if(case_entry.status === "REMOVED") { %>
+                                        <div class="failure">
+                                            <i class="fas fa-trash"></i>
+                                            <span>Eliminado</span>
+                                        </div>
+                                    <% } %>
+                                    <% if(case_entry.status === "PROCESSING" || case_entry.status === "WAITING") { %>
+                                        <div class="processing">
+                                            <i class="fas fa-spinner fa-spin"></i>
+                                            <span>Procesando</span>
+                                        </div>
+                                    <% } %>
+                                </td>
+                                <td title="User ID: <%= case_entry.user_id %>"><%= case_entry.name %></td>
+                                <td><%= case_entry.stage %></td>
+                                <td><%= case_entry.case_id %></td>
+                                <td style="white-space: nowrap"><%= case_entry.created.toLocaleDateString("es-AR") %></td>
+                                <td style="white-space: nowrap">
+                                    <a class="button" href="/panel/<%= case_entry.uid %>">Ver</a>
+                                <td style="white-space: nowrap">
+                                    <% if(case_entry.status === "READY" || case_entry.status === "PROCESSING" || case_entry.status === "WAITING") { %>
+                                    <a class="button" href="/view/<%= case_entry.uid %>" target="_blank">Visor</a>
+                                    <% } %>
+                                </td>
+                            </tr>
+                        <% } %>
+                        <% if(cases.length === 0) { %>
+                            <tr>
+                                <td colspan="999">No hay resultados</td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+            <div class="pagination">
+                <%
+                let max_page = Math.max(1, Math.ceil(total_cases / per_page));
+                %>
+                <% function renderPageItem(p) { %>
+                    <a class="<%= p === page ? 'active' : '' %>" href="?page=<%= p %><%= search_query.length ? '&q=' + search_query : '' %>"><%= p %></a>
+                <% } %>
+                <%
+                    let show_min_page = Math.max(1, page - 3);
+                    let show_max_page = Math.min(page + 3, max_page);
+                    if(show_min_page != 1) {
+                        renderPageItem(1);
+                        if(show_min_page > 2) {
+                            %><i class="ellip fas fa-ellipsis-h"></i><%
+                        }
+                    }
+                    for(let i = show_min_page; i <= show_max_page; i++)
+                        renderPageItem(i);
+                    if(show_max_page != max_page) {
+                        if(show_max_page < max_page - 1) {
+                            %><i class="ellip fas fa-ellipsis-h"></i><%
+                        }
+                        renderPageItem(max_page);
+                    }
+                 %>
+            </div>
+            <div class="pagination-info">
+                Página <%= page %> de <%= max_page %>, mostrando <%= cases.length %> de <%= total_cases %> registros.
+            </div>
+        </div>
+    </div>
+    <script>
+        var search_input = document.querySelector('.search-row input');
+        var search_btn = document.querySelector('.search-row button');
+
+        function search_changed() {
+            search_btn.disabled = search_input.value.length === 0;
+        }
+        function search() {
+            if(search_input.value.length > 0) {
+                window.location = '?q=' + search_input.value;
+            }
+        }
+
+        search_input.addEventListener('change', search_changed);
+        search_input.addEventListener('keyup', search_changed);
+        search_input.addEventListener('keypress', search_changed);
+        search_input.addEventListener('keydown', function(e) {
+            search_changed();
+            if(e.keyCode === 13 || e.key === "Enter") {
+                search();
+            }
+        });
+        search_btn.addEventListener('click', search);
+
+        search_changed();
+    </script>
+</body>
+</html>

@@ -1,0 +1,298 @@
+@import "reset.less";
+
+body {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	min-height: 100vh;
+	background: whitesmoke;
+}
+
+.header {
+    color: white;
+    background: @ks-color;
+    font-size: 23px;
+    user-select: none;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+	height: 45px;
+}
+
+#file-input {
+    display: none;
+}
+
+.drop-area {
+	padding: 12px;
+	background: #e5e5e5;
+	border-width: 7px;
+	border: 1px dashed silver;
+	border-width: 4px;
+    border-radius: 10px;
+    user-select: none;
+    cursor: pointer;
+    transition: 0.3s all;
+
+    &.is-dropping {
+        background: #bce2ff;
+        border-color: #78c5ff;
+    }
+}
+
+button, .button {
+    display: inline-block;
+    background-color: @ks-color;
+    color: white;
+    padding: 11px;
+    border-radius: 3px;
+    cursor: pointer;
+    text-decoration: none;
+
+    &:disabled {
+        cursor: not-allowed;
+        background-color: @ks-color-light;
+    }
+
+    i {
+        margin-right: 5px;
+    }
+
+    &.red {
+        background-color: #ca0000;
+    }
+}
+
+.container {
+	width: 360px;
+	border: 5px solid @ks-color;
+    border-radius: 3px;
+    background: white;
+	box-shadow: 0 0px 16px 0px rgba(86, 86, 86, 0.56);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    &.full {
+        @media (max-width: 700px) {
+            min-height: 100vh;
+            width: 100%;
+            border-radius: 0;
+            border-bottom: 0;
+            border-left: 0;
+            border-right: 0;
+        }
+        @media (min-width: 700px) {
+            min-width: 690px;
+            margin: 15px 0;
+        }
+    }
+
+    .buttons {
+        display: flex;
+        justify-content: center;
+        margin: 10px auto 0 auto;
+        #submit {
+            margin-left: 5px;
+        }
+    }
+    .search-row, .data {
+        input, select {
+            background: #efeded;
+            padding: 6px;
+            width: 100%;
+        }
+    }
+    .search-row {
+        margin: 10px auto 0 auto;
+        display: flex;
+        .spacer { flex: 1; }
+        .button, button { padding: 7px; }
+        input {
+            width: 250px;
+            max-width: 40%;
+            margin-right: 6px;
+        }
+    }
+
+    .content {
+        flex: 1;
+        padding: 8px 20px 10px 20px;
+
+        .title {
+            font-size: 23px;
+            color: @ks-color;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .data {
+            width: 100%;
+            margin: 10px 0;
+
+            tbody {
+                th, td {
+                    width: 50%;
+                    padding: 0 5px;
+                }
+                th { text-align: right;}
+                td { text-align: left; }
+            }
+        }
+
+        .upload {
+            .legend {
+                color: gray;
+                font-family: monospace;
+                text-align: center;
+            }
+        }
+
+        .uid {
+            color: gray;
+            text-align: center;
+        }
+        .status {
+            text-align: center;
+            
+            a {
+                display: block;
+                border-radius: 4px;
+                padding: 5px;
+                font-weight: bold;
+                text-decoration: none;
+                color: #0060d7;
+                overflow-wrap: anywhere;
+            }
+            code {
+                font-family: monospace;
+                text-align: left;
+                word-break: break-all;
+            }
+        }
+        .processing {
+            color: #0052dc;
+            font-weight: bold;
+        }
+        .success {
+            color: #00ae00;
+            font-weight: bold;
+        }
+        .failure {
+            color: red;
+            font-weight: bold;
+        }
+
+        .files-list-container {
+            display: none;
+            max-height: 200px;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        .files-title {
+            display: none;
+            text-align: center;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        .files-list {
+            width: 100%;
+
+            tbody {
+                font-size: 13px;
+
+                .filename {
+                    max-width: 0;
+                    color: #797979;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    overflow: hidden;
+                }
+                .filesize {
+                    width: 70px;
+                    text-align: right;
+                    padding-right: 7px;
+                }
+
+                .progress {
+                    width: 25px;
+                    text-align: right;
+                    word-break: keep-all;
+                    white-space: nowrap;
+                }
+
+                .retry {
+                    margin-left: 4px;
+                    padding: 5px;
+                    text-align: center;
+                    i { margin: 0; }
+                }
+            }
+            /*
+            max-height: 200px;
+            overflow: auto;
+            margin-top: 8px;
+
+            .file {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+            }
+            */
+        }
+        .result-box {
+            text-align: center;
+            margin: 10px auto;
+            a {
+                padding: 4px;
+            }
+        }
+        .cases-list {
+            width: 100%;
+            overflow: auto;
+            table {
+                width: 100%;
+            }
+            td {
+                text-align: center;
+                .button {
+                    padding: 5px;
+                }
+            }
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 10px;
+
+            a {
+                background-color: @ks-color;
+                padding: 5px;
+                border-radius: 4px;
+                color: white;
+                text-decoration: none;
+                height: 29px;
+                min-width: 29px;
+                text-align: center;
+                margin-right: 2px;
+
+                &.active {
+                    background-color: @ks-active;
+                }
+            }
+
+            .ellip {
+                color: @ks-color;
+                margin-right: 2px;
+            }
+        }
+        .pagination-info {
+            text-align: center;
+        }
+    }
+}

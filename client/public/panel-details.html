@@ -1,0 +1,148 @@
+
+<title><%= case_.uid %></title>
+
+<h2>Información detallada</h2>
+
+<a href="/panel/<%= case_.uid %>">Volver al panel</a>
+<br>
+<span>Esta pantalla está presente para debuggear problemas. Todo la información relacionada al caso esta acá, tal cual está en la DB.</span>
+
+<br>
+<br>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th colspan="999">Caso</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th>ID</th>
+            <td><%= case_.id %></td>
+        </tr>
+        <tr>
+            <th>UID</th>
+            <td><%= case_.uid %></td>
+        </tr>
+        <tr>
+            <th>Estado</th>
+            <td><%= case_.status %></td>
+        </tr>
+        <tr>
+            <th>Fecha de creación</th>
+            <td><%= case_.created %></td>
+        </tr>
+        <tr>
+            <th>Nombre</th>
+            <td><%= case_.name %></td>
+        </tr>
+        <tr>
+            <th>Etapa</th>
+            <td><%= case_.stage %></td>
+        </tr>
+        <tr>
+            <th>Maxilares</th>
+            <td><%= case_.maxilars %></td>
+        </tr>
+        <tr>
+            <th>User ID</th>
+            <td><%= case_.user_id %></td>
+        </tr>
+        <tr>
+            <th>Case ID</th>
+            <td><%= case_.case_id %></td>
+        </tr>
+        <tr>
+            <th>Result (length)</th>
+            <td><%= case_.result ? case_.result.length : 'null' %></td>
+        </tr>
+        <tr>
+            <th>CSV content (length)</th>
+            <td><%= case_.csv_content ? case_.csv_content.length : 'null' %></td>
+        </tr>
+    </tbody>
+</table>
+<br>
+Nota: las texturas no aparecen clasificadas
+<table border="1">
+    <thead>
+        <tr>
+            <th colspan="999">Archivos de entrada</th>
+        </tr>
+        <tr>
+            <th rowspan="2">ID</th>
+            <th rowspan="2">Nombre</th>
+            <th rowspan="2">MD5</th>
+            <th colspan="4">Clasificación</th>
+            <th rowspan="2">Tamaño (bytes)</th>
+            <th rowspan="2">Fecha</th>
+        </tr>
+        <tr>
+            <th>Format</th>
+            <th>Type</th>
+            <th>Kind</th>
+            <th>Step</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% for(let input_file of input_files) { %>
+            <%
+            let file_classified = input_files_classified.filter(x => x.md5 === input_file.md5);
+            %>
+            <tr>
+                <td><%= input_file.id %></td>
+                <td><%= input_file.name %></td>
+                <td><%= input_file.md5 %></td>
+                <% if(file_classified.length > 0) { %>
+                    <% let fc = file_classified[0]; %>
+                    <td><%= fc.format %></td>
+                    <td><%= fc.type %></td>
+                    <td><%= fc.kind %></td>
+                    <td><%= fc.step %></td>
+                <% } else { %>
+                    <td colspan="4">NO CLASIFICADO</td>
+                <% } %>
+                <td><%= input_file.size %></td>
+                <td><%= input_file.uploaded %></td>
+            </tr>
+        <% } %>
+    </tbody>
+</table>
+<br>
+<table border="1">
+    <thead>
+        <tr>
+            <th colspan="999">Archivos de salida</th>
+        </tr>
+        <tr>
+            <th>UID</th>
+            <th>URL</th>
+            <th>Tamaño (bytes)</th>
+            <th>Fecha</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% for(let output_file of output_files) { %>
+            <tr>
+                <td><%= output_file.uid %></td>
+                <td><%= output_file.url %></td>
+                <td><%= output_file.size %></td>
+                <td><%= output_file.uploaded %></td>
+            </tr>
+        <% } %>
+    </tbody>
+</table>
+<br>
+<table border="1">
+    <tbody>
+        <tr>
+            <th>Result</th>
+            <td><%= case_.result %></td>
+        </tr>
+        <tr>
+            <th>CSV content</th>
+            <td><%= case_.csv_content %></td>
+        </tr>
+    </tbody>
+</table>

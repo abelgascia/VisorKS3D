@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cargar caso &middot; KeepSmiling Visor 3D</title>
+    <link rel="shortcut icon" type="image/png" href="/favicon.png"/>
+    <link rel="stylesheet" href="/panel.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <span>Visor</span>
+            <div class="logo"></div>
+        </div>
+        <div class="content">
+            <div class="title">Cargar caso</div>
+            <table class="data">
+                <thead>
+                    <tr>
+                        <th colspan="999">Datos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>User ID</th>
+                        <td><input name="user_id" type="number" value="<%= params.user_id || 0 %>" min="0" placeholder="0"></td>
+                    </tr>
+                    <tr>
+                        <th>Case ID</th>
+                        <td><input name="case_id" type="text" value="<%= params.case_id || "" %>" placeholder="1234"></td>
+                    </tr>
+                    <tr>
+                        <th>Nombre</th>
+                        <td><input name="name" type="text" value="<%= params.name %>" autocomplete="off" placeholder="Nombre"></td>
+                    </tr>
+                    <%
+                    function renderSelect(name, param_name, defaults) {
+                        %>
+                        <select name="<%= name %>">
+                            <% if(params && param_name in params && params[param_name].length > 0) { %>
+                                <option value="<%= params[param_name] %>" selected><%= params[param_name] %></option>
+                            <% } %>
+                            <optgroup label="Predefinidas">
+                                <% for(let opt of defaults) { %>
+                                    <option value="<%= opt %>"><%= opt.length === 0 ? "No especificado" : opt %></option>
+                                <% } %>
+                            </optgroup>
+                        </select>
+                        <%
+                    }
+                    %>
+                    <tr>
+                        <th>Etapa</th>
+                        <td><% renderSelect("stage", "stage", default_stages); %></td>
+                    </tr>
+                    <tr>
+                        <th>Maxilares</th>
+                        <td><% renderSelect("maxilars", "maxilars", default_maxilars); %></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="upload">
+                <input id="file-input" type="file" accept=".stl, .wrl, .jpg, .xml, .csv" multiple="multiple" />
+                <div class="drop-area">
+                    Arrastra archivos aquí o haz click para seleccionar
+                </div>
+                <div class="legend">
+                    Se esperan archivos STL, WRL, JPG, XML y CSV<br>
+                    Máx. 50MB por archivo
+                </div>
+            </div>
+            <div class="buttons">
+                <a class="button" href="/panel"><i class="fas fa-times"></i><span>Cancelar</span></a>
+                <button id="submit" disabled><i class="fas fa-file-upload"></i><span>Enviar</span></button>
+            </div>
+            <div class="files-title">Archivos subidos (<span id="done-files"></span>/<span id="total-files"></span>)</div>
+            <div class="files-list-container">
+                <table class="files-list">
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script src="/upload.js"></script>
+</body>
+</html>

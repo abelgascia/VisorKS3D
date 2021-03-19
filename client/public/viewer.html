@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <!-- build: <%- buildHash %> (<%- PRODUCTION ? 'PRODUCTION' : 'DEVELOPMENT' %>) -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= viewer ? `${viewer.name} (${viewer.stage})` : '404' %> &middot; KeepSmiling Visor 3D</title>
+    <link rel="shortcut icon" type="image/png" href="/favicon.png"/>
+    <link rel="stylesheet" href="/viewer.css">
+</head>
+<body>
+    <div class="header">
+        <span>Visor</span>
+        <div class="logo"></div>
+    </div>
+    <div class="status">
+        <div class="error"></div>
+        <div class="progress">
+            <div class="percentage"><span>0</span> %</div>
+            <div class="legend"></div>
+        </div>
+    </div>
+    <div class="report-cont">
+        <div class="report">
+            <div class="toggle"><i class="fas fa-chevron-left"></i></div>
+            <ul class="nav">
+                <li data-tab="bolton">Bolton</li>
+                <li data-tab="espacio">Espacio</li>
+                <li data-tab="teeth-movement">Movimientos</li>
+                <li data-tab="botones">Botones</li>
+                <li data-tab="stripping">Stripping</li>
+
+                <li data-tab="arco-ideal">Arco Ideal</li>
+                <li data-tab="tooth-width">Tooth Width</li>
+            </ul>
+            <div class="tabs">
+                <div class="tab" data-tab="bolton"></div>
+                <div class="tab" data-tab="espacio"></div>
+                <div class="tab" data-tab="teeth-movement"></div>
+                <div class="tab" data-tab="botones"></div>
+                <div class="tab" data-tab="stripping"></div>
+                
+                <div class="tab" data-tab="arco-ideal"></div>
+                <div class="tab" data-tab="tooth-width"></div>
+            </div>
+        </div>
+    </div>
+    <div class="viewer">
+        <noscript>Para ver esta página se necesita JavaScript activado</noscript>
+        <div class="case-info">
+            <div class="case-number"><%= viewer ? viewer.case_id : null %></div>
+            <div class="case-name"><%= viewer ? viewer.name : null %></div>
+            <div class="case-stage"><%= viewer ? viewer.stage : null %></div>
+            <div class="case-maxilars"><%= viewer ? viewer.maxilars : null %></div>
+        </div>
+        <div class="controls-top">
+            <div class="control control-left"></div>
+            <div class="control control-center"></div>
+            <div class="control control-right"></div>
+            <div class="control control-superior"></div>
+            <div class="control control-inferior"></div>
+            <div class="control control-open"></div>
+        </div>
+        <div class="renderer">
+            <canvas id="output"></canvas>
+        </div>
+        <div class="controls-bottom">
+            <div class="control control-fast-backward"><i class="fas fa-fast-backward"></i></div>
+            <div class="control control-backward"><i class="fas fa-step-backward"></i></div>
+            <div class="control control-play"><i class="fas fa-play"></i></div>
+            <div class="control control-pause"><i class="fas fa-pause"></i></div>
+            <div class="control control-forward"><i class="fas fa-step-forward"></i></div>
+            <div class="control control-fast-forward"><i class="fas fa-fast-forward"></i></div>
+            <div class="control control-zoom-in"><i class="fas fa-search-plus"></i></div>
+            <div class="control control-zoom-out"><i class="fas fa-search-minus"></i></div>
+        </div>
+        <div class="bottom">
+            <div class="steps">
+                <span>Alineador</span>
+                <ul class="steps-bar"></ul>
+                <div class="step-small">
+                    <div class="indicator">
+                        <div class="step-current circle"></div>
+                        <span>de</span>
+                        <div class="step-max circle">11</div>
+                    </div>
+                    <ul class="steps-list"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>window.viewer_data = <%- JSON.stringify(viewer) %></script>
+    <script src="/viewer.js"></script>
+</body>
+</html>

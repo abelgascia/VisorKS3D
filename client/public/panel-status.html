@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= case_result.case_id %> - <%= case_result.name %> (<%= case_result.stage %>) &middot; KeepSmiling Visor 3D</title>
+    <link rel="shortcut icon" type="image/png" href="/favicon.png"/>
+    <link rel="stylesheet" href="/panel.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <span>Visor</span>
+            <div class="logo"></div>
+        </div>
+        <div class="content">
+            <div class="title">Estado del caso</div>
+            <br>
+            <div class="uid"><%= case_result.uid %></div>
+            <table class="data">
+                <thead>
+                    <tr>
+                        <th colspan="999">Datos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>ID</th>
+                        <td><%= case_result.id %></td>
+                    </tr>
+                    <tr>
+                        <th>User ID</th>
+                        <td><%= case_result.user_id %></td>
+                    </tr>
+                    <tr>
+                        <th>Case ID</th>
+                        <td><%= case_result.case_id %></td>
+                    </tr>
+                    <tr>
+                        <th>Nombre</th>
+                        <td><%= case_result.name %></td>
+                    </tr>
+                    <tr>
+                        <th>Etapa</th>
+                        <td><%= case_result.stage %></td>
+                    </tr>
+                    <tr>
+                        <th>Maxilares</th>
+                        <td><%= case_result.maxilars.length === 0 ? "No especificado" : case_result.maxilars %></td>
+                    </tr>
+                    <tr>
+                        <th>Creado</th>
+                        <td title="<%= case_result.created.toLocaleDateString("es-AR") %> <%= case_result.created.toLocaleTimeString("es-AR") %>"><%= case_result.created.toLocaleDateString("es-AR") %></td>
+                    </tr>
+                    <tr>
+                        <th>Archivos de entrada</th>
+                        <td><%= input_count %> (<%= input_size %>)</td>
+                    </tr>
+                    <tr>
+                        <th>Archivos de salida</th>
+                        <td><%= output_count %> (<%= output_size %>)</td>
+                    </tr>
+                    <%
+                    let has_xml_metadata = "-", has_csv_metadata = "-";
+                    if(case_result.status === 'READY') {
+                        let parsed_result = JSON.parse(case_result.result);
+                        has_xml_metadata = parsed_result.filter(x => x.type === "metadata").length > 0 ? "Si" : "No";
+                        has_csv_metadata = parsed_result.filter(x => x.type === "metadata-csv").length > 0 || (case_result.csv_content !== null && case_result.csv_content.length > 0) ? "Si" : "No";
+                    }
+                    %>
+                    <tr>
+                        <th>XML Metadata</th>
+                        <td><%= has_xml_metadata %></td>
+                    </tr>
+                    <tr>
+                        <th>CSV Metadata</th>
+                        <td><%= has_csv_metadata %></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="status">
+                <%
+                    let link = `${host}/view/${case_result.uid}`;
+                %>
+                <% if(case_result.status === 'PROCESSING' || case_result.status === 'WAITING') { %>
+                    <div class="processing">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <span>El caso se está procesando</span>
+                    </div>
+                    <br>
+                    <div>
+                        Una vez procesado, el visor estará disponible en el siguiente enlace:
+                        <a href="<%= link %>" target="_blank"><%= link %></a>
+                    </div>
+                <% } %>
+                <% if(case_result.status === 'READY') { %>
+                    <div class="success">
+                        <i class="fas fa-check-circle"></i>
+                        <span>El caso fue procesado con éxito</span>
+                    </div>
+                    <br>
+                    <div>
+                        <span>El visor está disponible en el siguiente enlace:</span>
+                        <a href="<%= link %>" target="_blank"><%= link %></a>
+                    </div>
+                <% } %>
+                <% if(case_result.status === 'ERRORED') { %>
+                    <div class="failure">
+                        <i class="fas fa-times"></i>
+                        <span>Falló el procesamiento del caso, abajo podrá encontrar más información</span>
+                    </div>
+                    <br>
+                    <code><%- case_result.result %></code>
+                <% } %>
+                <% if(case_result.status === 'REMOVED') { %>
+                    <div class="failure">
+                        <i class="fas fa-trash"></i>
+                        <span>El caso fue eliminado</span>
+                    </div>
+                    <br>
+                    <div>
+                        <span>El visor ya no está disponible</span>
+                    </div>
+                <% } %>
+            </div>
+            <div class="buttons">
+                <a class="button" href="/panel" style="margin-right: 5px;"><span>Volver a la lista</span></a>
+                <a class="button" href="/panel/upload"><i class="fas fa-file-upload"></i><span>Subir otro caso</span></a>
+            </div>
+            <div class="buttons">
+                <% if(case_result.status !== 'REMOVED' && case_result.status !== 'ERRORED' && case_result.status !== 'PROCESSING') { %>
+                <button onclick="attach_csv(this);" style="margin-right: 5px;"><i class="fas fa-file-csv"></i><span>Adjuntar CSV</span></button>
+                <% } %>
+                <% if(case_result.status !== 'REMOVED' && case_result.status !== 'ERRORED') { %>
+                <button class="red" onclick="remove();" style="margin-right: 5px;"><i class="fas fa-trash"></i><span>Eliminar caso</span></button>
+                <% } %>
+                <a class="button" style="width: 41px;height: 41px;text-align: center;" href="/panel/<%= case_result.uid %>/details" title="Ver detalles"><i class="fas fa-info-circle"></i></a>
+            </div>
+        </div>
+    </div>
+    <script>
+        if(<%= case_result.status === 'PROCESSING' || case_result.status === 'WAITING' %>) {
+            setTimeout(function() {
+                window.location.reload();
+            }, 5000);
+        }
+        function remove() {
+            if(confirm("Seguro que quieres eliminar el caso #<%= case_result.id %>: <%= case_result.name %> (<%= case_result.stage %>)?")) {
+                window.location = '/panel/remove/<%= case_result.uid %>';
+            }
+        }
+        function attach_csv(btn) {
+            var input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.csv';
+            input.onchange = e => {
+                btn.disabled = true;
+
+                var file = e.target.files[0];
+                var reader = new FileReader();
+                reader.readAsBinaryString(file);
+                reader.onload = readerEvent => {
+                    var content = readerEvent.target.result;
+                    console.log(content);
+                    
+                    var data = new FormData();
+                    data.append('csv_content', content);
+
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('POST', '/panel/update_csv/<%= case_result.uid %>', true);
+                    xhr.onload = function () {
+                        if(xhr.status != 200) {
+                            alert("Falló la carga del CSV. Status: " + xhr.status);
+                            btn.disabled = false;
+                        }
+                        else {
+                            alert("CSV actualizado correctamente.");
+                            window.location.reload();
+                        }
+                    };
+                    xhr.onerror = function() {
+                        if(xhr.status != 200)
+                            alert("Falló la carga del CSV. Status: " + xhr.status);
+                        btn.disabled = false;
+                    }
+                    xhr.send(data);
+                };
+            }
+            input.click();
+        }
+    </script>
+</body>
+</html>
