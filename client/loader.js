@@ -16,7 +16,7 @@ const loadFile = (url, response_type, report_progress) => new Promise((resolve, 
         }
     };
     xhr.onerror = (e) => {
-        reject(e instanceof ProgressEvent ? "XHR Error" : e);
+        reject(e instanceof ProgressEvent ? "Hubo un problema de conexión, vuelva a intentarlo." : e);
     };
     xhr.onprogress = function(e) {
         report_progress(e.loaded, e.lengthComputable ? e.total : 0);
