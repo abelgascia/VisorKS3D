@@ -348,7 +348,9 @@ export default (report_xml, report_csv) => {
             generateMarks(header_line + 3, '13.5%', MARKS_OFFSETS_TOP, 'top');
             generateMarks(header_line + 6, '79%', MARKS_OFFSETS_BOTTOM, 'bottom');
 
-            box_cont.append($(`<ddiv class="botones-cont"></div>`).append(botones_cont));
+            kind === 'temporal-bucal' || kind === 'temporal-lingual'
+            ? box_cont.append($(`<ddiv class="botones-cont hidden"></div>`).append(botones_cont))
+            : box_cont.append($(`<ddiv class="botones-cont"></div>`).append(botones_cont))
         }
         
         createDiagram('bucal', 41);
