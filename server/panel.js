@@ -1,7 +1,7 @@
 const express = require('express');
 const fileUpload = require('express-fileupload');
 const path = require('path');
-const axios = require('axios');
+const request = require('request');
 const { v4: uuidv4 } = require('uuid');
 const prettyBytes = require('pretty-bytes');
 
@@ -234,21 +234,17 @@ router.post('/upload/submit', async (req, res) => {
 	
 	let external_case_id = req.body.case_id;
 
-	async function pingKeep(retry) {
-        
-        await axios.post('https://keepsmilinglog.com/htmls/ping_csv_back.php?external_id=' + external_case_id)
-        .then(res => {
-            console.log("Pinged Keep about case external =", external_case_id, "internal =", case_id);
-        })
-        .catch(err => {
-            if(err) {
-                console.error("Can't ping Keep", external_case_id, uuid, error, "retry=", retry);
-                if(retry > 3)
-                	return;
-                setTimeout(() => pingKeep(retry + 1), 1000 * 60);
+	function pingKeep(retry) {
+		request('https://keepsmilinglog.com/htmls/ping_csv_back.php?external_id=' + external_case_id, function (error, response, body) {
+			if(error){
+				console.error("Can't ping Keep", external_case_id, uuid, error, "retry=", retry);
+				if(retry > 3)
+					return;
+				setTimeout(() => pingKeep(retry + 1), 1000 * 60);
+			} else {
+                console.log("Pinged Keep about case external =", external_case_id, "internal =", case_id);
             }
-        })
-
+		});
 	}
 	
 	pingKeep(0);
