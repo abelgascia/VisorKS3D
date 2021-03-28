@@ -313,11 +313,7 @@ export default (report_xml, report_csv) => {
         </div>
         `);
         function createDiagram(kind, header_line) {
-            let botones_cont
-
-            botones_cont = kind === 'temporal-bucal' || kind === 'temporal-lingual' 
-            ? $(`<div class="botones botones-${kind} hidden"></div>`)
-            : $(`<div class="botones botones-${kind}"></div>`)
+            let botones_cont = $(`<div class="botones botones-${kind}"></div>`);
 
             function generateMarks(marks_line, top, offsets, position) {
                 let marks_data = csv_lines[marks_line].split(";");
@@ -353,14 +349,6 @@ export default (report_xml, report_csv) => {
         
         createDiagram('bucal', 41);
         createDiagram('lingual', 49);
-
-        // KIDS ADAPTATION
-
-        createDiagram('temporal-bucal', 41)
-        createDiagram('temporal-lingual', 49)
-
-        // KIDS ADAPTATION
-
 
         box_cont.append(`
             <div class="small-notice">*La ubicación de los botones es de carácter ilustrativo</div>
