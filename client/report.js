@@ -347,6 +347,8 @@ export default (report_xml, report_csv) => {
                 }
             }
 
+            console.log(csv_lines[csv_lines.lenght - 1])
+
             generateMarks(header_line + 3, '13.5%', MARKS_OFFSETS_TOP, 'top');
             generateMarks(header_line + 6, '79%', MARKS_OFFSETS_BOTTOM, 'bottom');
 
