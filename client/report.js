@@ -273,6 +273,8 @@ export default (report_xml, report_csv) => {
         one_ok = true;
 
         console.log('ULTIMO DATO DEL CSV ', csv_lines[csv_lines.length - 1])
+        console.log('ANTEULTIMO DATO DEL CSV ', csv_lines[csv_lines.length - 2])
+        console.log('ANTE ANTEULTIMO DATO DEL CSV ', csv_lines[csv_lines.length - 3])
 
         const MARKS_OFFSETS_TOP = [
             3.8,
