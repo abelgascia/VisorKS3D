@@ -7,6 +7,8 @@ export default (report_xml, report_csv) => {
     let result = { };
 
     console.log("Reporte", input, csv_lines);
+    console.log('INPUT: ', input)
+    console.log('CSV_LINES: ', csv_lines)
     
     function noData(tab_div) {
         tab_div.append(`
