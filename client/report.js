@@ -272,6 +272,10 @@ export default (report_xml, report_csv) => {
     if(csv_lines.length >= 58) {
         one_ok = true;
 
+        console.log('ULTIMO DATO DEL CSV ', csv_lines[csv_lines.length - 1])
+        console.log('ANTEULTIMO DATO DEL CSV ', csv_lines[csv_lines.length - 2])
+        console.log('ANTE ANTEULTIMO DATO DEL CSV ', csv_lines[csv_lines.length - 3])
+
         const MARKS_OFFSETS_TOP = [
             3.8,
             10.5,
@@ -357,145 +361,9 @@ export default (report_xml, report_csv) => {
             ? box_cont.append($(`<ddiv class="botones-cont hidden"></div>`).append(botones_cont))
             : box_cont.append($(`<ddiv class="botones-cont"></div>`).append(botones_cont))
         }
-        
-        createDiagram('bucal', 41);
-        createDiagram('lingual', 49);
 
-        // KIDS ADAPTATION
-
-        createDiagram('temporal-bucal', 41)
-        createDiagram('temporal-lingual', 49)
-
-        // KIDS ADAPTATION
-
-
-        box_cont.append(`
-            <div class="small-notice">*La ubicación de los botones es de carácter ilustrativo</div>
-            <div class="title">Referencias</div>
-            <div class="references">
-                <div class="item">
-                    <div class="mark mark-T"></div>
-                    <span>Tip</span>
-                </div>
-                <div class="item">
-                    <div class="mark mark-M"></div>
-                    <span>Molar</span>
-                </div>
-                <div class="item">
-                    <div class="mark mark-R-RIGHT"></div>
-                    <span>Rotar</span>
-                </div>
-                <div class="item">
-                    <div class="mark mark-EI"></div>
-                    <span>Extruir-Intruir</span>
-                </div>
-                <div class="item">
-                    <div class="mark mark-DT"></div>
-                    <span>Doble Tip</span>
-                </div>
-                <div class="item">
-                    <div class="mark mark-BP"></div>
-                    <span>Barra de Presión</span>
-                </div>
-                <div class="item">
-                    <div class="mark mark-EX"></div>
-                    <span>Extracción</span>
-                </div>
-                <div class="item">
-                    <div class="mark mark-A"></div>
-                    <span>Ausente</span>
-                </div>
-            </div>
-            </div>
-        `)
-
-        botones_tab.append(box_cont);
-        window.last_tab_open = "botones";
-    } 
-    
-    if(csv_lines.length >= 70) {
-        one_ok = true;
-
-        console.log('ULTIMO DATO DEL CSV ', csv_lines[csv_lines.length - 1])
-        console.log('ANTEULTIMO DATO DEL CSV ', csv_lines[csv_lines.length - 2])
-        console.log('ANTE ANTEULTIMO DATO DEL CSV ', csv_lines[csv_lines.length - 3])
-
-        const MARKS_TEMPORALS_OFFSETS_TOP = [
-            17.5,
-            25.5,
-            33,
-            39,
-            45,
-            50.5,
-            56.5,
-            62.5,
-            70,
-            77.5,
-        ];
-        
-        const MARKS_TEMPORALS_OFFSETS_BOTTOM = [
-            20.5,
-            28.5,
-            35.5,
-            41,
-            45.5,
-            49.5,
-            54,
-            59.5,
-            66.5,
-            74,
-        ];
-
-        let box_cont = $(`
-        <div class="box" style="padding-left: 0;padding-right: 0;">
-            <div class="title">Botones-Attachments</div>
-        </div>
-        `);
-        function createDiagram(kind, header_line) {
-            let botones_cont = $(`<div class="botones botones-${kind}"></div>`)
-            
-
-            // botones_cont = kind === 'temporal-bucal' || kind === 'temporal-lingual' 
-            // ? $(`<div class="botones botones-${kind} hidden"></div>`)
-            // : $(`<div class="botones botones-${kind}"></div>`)
-
-            function generateMarks(marks_line, top, offsets, position) {
-                let marks_data = csv_lines[marks_line].split(";");
-                console.log('LINEAS DEL CSV ', csv_lines[41])
-                console.log('LINEAS DEL CSV ', csv_lines[49])
-
-                for(let i = 0; i < 16; i++) {
-                    let first_half = i <= 7;
-                    let mark_index = 3 + i;
-                    if(mark_index < marks_data.length && marks_data[mark_index].length < 5) {
-                        let mark = marks_data[mark_index].toUpperCase();
-                        let left = offsets[i] + "%";
-
-                        switch(mark) {
-                            case "RM":
-                                mark = first_half ? "R-RIGHT" : "R-LEFT";
-                            break;
-                            case "RD":
-                                mark = first_half ? "R-LEFT" : "R-RIGHT";
-                            break;
-                        }
-
-                        botones_cont.append(`
-                            <div class="mark mark-${mark} ${mark === "EI" && position === 'bottom' ? "rot180" : ''}" data-idx="${mark_index}" style="top:${top};left:${left}"></div>
-                        `);
-                    }
-                }
-            }
-
-            
-
-            generateMarks(header_line + 3, '13.5%', MARKS_OFFSETS_TOP, 'top');
-            generateMarks(header_line + 6, '79%', MARKS_OFFSETS_BOTTOM, 'bottom');
-
-            kind === 'temporal-bucal' || kind === 'temporal-lingual'
-            ? box_cont.append($(`<ddiv class="botones-cont hidden"></div>`).append(botones_cont))
-            : box_cont.append($(`<ddiv class="botones-cont"></div>`).append(botones_cont))
-        }
+        console.log('CSV LINES 41 ', csv_lines[41])
+        console.log('CSV LINES 49 ', csv_lines[49])
         
         createDiagram('bucal', 41);
         createDiagram('lingual', 49);
@@ -572,3 +440,28 @@ export default (report_xml, report_csv) => {
 
 
 
+const MARKS_TEMPORALS_OFFSETS_TOP = [
+    17.5,
+    25.5,
+    33,
+    39,
+    45,
+    50.5,
+    56.5,
+    62.5,
+    70,
+    77.5,
+];
+
+const MARKS_TEMPORALS_OFFSETS_BOTTOM = [
+    20.5,
+    28.5,
+    35.5,
+    41,
+    45.5,
+    49.5,
+    54,
+    59.5,
+    66.5,
+    74,
+];
