@@ -461,6 +461,8 @@ export default (report_xml, report_csv) => {
 
             function generateMarks(marks_line, top, offsets, position) {
                 let marks_data = csv_lines[marks_line].split(";");
+                console.log('LINEAS DEL CSV ', csv_lines[41])
+                console.log('LINEAS DEL CSV ', csv_lines[49])
 
                 for(let i = 0; i < 16; i++) {
                     let first_half = i <= 7;
@@ -494,8 +496,7 @@ export default (report_xml, report_csv) => {
             ? box_cont.append($(`<ddiv class="botones-cont hidden"></div>`).append(botones_cont))
             : box_cont.append($(`<ddiv class="botones-cont"></div>`).append(botones_cont))
         }
-        console.log('LINEAS DEL CSV ', csv_lines[41])
-        console.log('LINEAS DEL CSV ', csv_lines[49])
+        
         createDiagram('bucal', 41);
         createDiagram('lingual', 49);
 
