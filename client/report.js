@@ -9,6 +9,9 @@ export default (report_xml, report_csv) => {
     console.log("Reporte", input, csv_lines);
     console.log('INPUT: ', input)
     console.log('CSV_LINES: ', csv_lines)
+    console.log('CSV_LINES: ', csv_lines[41])
+    console.log('CSV_LINES: ', csv_lines[49])
+
     
     function noData(tab_div) {
         tab_div.append(`
@@ -361,9 +364,6 @@ export default (report_xml, report_csv) => {
             ? box_cont.append($(`<ddiv class="botones-cont hidden"></div>`).append(botones_cont))
             : box_cont.append($(`<ddiv class="botones-cont"></div>`).append(botones_cont))
         }
-
-        console.log('CSV LINES 41 ', csv_lines[41])
-        console.log('CSV LINES 49 ', csv_lines[49])
         
         createDiagram('bucal', 41);
         createDiagram('lingual', 49);
@@ -437,31 +437,3 @@ export default (report_xml, report_csv) => {
 
     return result;
 };
-
-
-
-const MARKS_TEMPORALS_OFFSETS_TOP = [
-    17.5,
-    25.5,
-    33,
-    39,
-    45,
-    50.5,
-    56.5,
-    62.5,
-    70,
-    77.5,
-];
-
-const MARKS_TEMPORALS_OFFSETS_BOTTOM = [
-    20.5,
-    28.5,
-    35.5,
-    41,
-    45.5,
-    49.5,
-    54,
-    59.5,
-    66.5,
-    74,
-];
