@@ -275,6 +275,14 @@ export default (report_xml, report_csv) => {
     if(csv_lines.length >= 58) {
         one_ok = true;
 
+        if(csv_lines[csv_lines.length - 2] === 'permanentes') {
+            console.log('PERMANTENSDFNASOIDNSA')
+        } else if(csv_lines[csv_lines.length - 2] === 'temporarios') {
+            console.log('ASDIOASNDOASIDNASDOIASNODASNODISANDSA')
+        } else {
+            console.log('MSAIDONASDOIASNDISOADNSAOIDNSAIODNSAIODNSAODISANDOIASDEWOUIRYEWUIRYWEIR324895467934659435693456')
+        }
+
         const MARKS_OFFSETS_TOP = [
             3.8,
             10.5,
