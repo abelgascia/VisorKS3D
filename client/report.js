@@ -275,110 +275,233 @@ export default (report_xml, report_csv) => {
     if(csv_lines.length >= 58) {
         one_ok = true;
 
-        if(csv_lines[csv_lines.length - 2] === 'permanentes') {
-            console.log('PERMANTENSDFNASOIDNSA')
-        } else if(csv_lines[csv_lines.length - 2] === 'temporarios') {
-            console.log('ASDIOASNDOASIDNASDOIASNODASNODISANDSA')
-        } else {
-            console.log('MSAIDONASDOIASNDISOADNSAOIDNSAIODNSAIODNSAODISANDOIASDEWOUIRYEWUIRYWEIR324895467934659435693456')
-        }
-
-        const MARKS_OFFSETS_TOP = [
-            3.8,
-            10.5,
-            17.5,
-            24.2,
-            29,
-            34.3,
-            39.6,
-            45,
-            51,
-            56.2,
-            61.5,
-            67,
-            71.7,
-            78.1,
-            85.5,
-            92
-        ];
-        const MARKS_OFFSETS_BOTTOM = [
-            4.6,
-            12,
-            19.5,
-            26.4,
-            31.7,
-            37,
-            41.7,
-            45.8,
-            50,
-            54.2,
-            58.8,
-            64.2,
-            69.4,
-            76.4,
-            83.8,
-            91.2
-        ];
-
         let box_cont = $(`
         <div class="box" style="padding-left: 0;padding-right: 0;">
             <div class="title">Botones-Attachments</div>
         </div>
         `);
-        function createDiagram(kind, header_line) {
-            let botones_cont = $(`<div class="botones botones-${kind}"></div>`)
-            
 
-            // botones_cont = kind === 'temporal-bucal' || kind === 'temporal-lingual' 
-            // ? $(`<div class="botones botones-${kind} hidden"></div>`)
-            // : $(`<div class="botones botones-${kind}"></div>`)
+        if(csv_lines[csv_lines.length - 2] === 'permanentes') {
 
-            function generateMarks(marks_line, top, offsets, position) {
-                let marks_data = csv_lines[marks_line].split(";");
+            const MARKS_OFFSETS_TOP = [
+                3.8,
+                10.5,
+                17.5,
+                24.2,
+                29,
+                34.3,
+                39.6,
+                45,
+                51,
+                56.2,
+                61.5,
+                67,
+                71.7,
+                78.1,
+                85.5,
+                92
+            ];
+            const MARKS_OFFSETS_BOTTOM = [
+                4.6,
+                12,
+                19.5,
+                26.4,
+                31.7,
+                37,
+                41.7,
+                45.8,
+                50,
+                54.2,
+                58.8,
+                64.2,
+                69.4,
+                76.4,
+                83.8,
+                91.2
+            ];
 
-                for(let i = 0; i < 16; i++) {
-                    let first_half = i <= 7;
-                    let mark_index = 3 + i;
-                    if(mark_index < marks_data.length && marks_data[mark_index].length < 5) {
-                        let mark = marks_data[mark_index].toUpperCase();
-                        let left = offsets[i] + "%";
-
-                        switch(mark) {
-                            case "RM":
-                                mark = first_half ? "R-RIGHT" : "R-LEFT";
-                            break;
-                            case "RD":
-                                mark = first_half ? "R-LEFT" : "R-RIGHT";
-                            break;
+            function createDiagram(kind, header_line) {
+                let botones_cont = $(`<div class="botones botones-${kind}"></div>`)
+    
+                function generateMarks(marks_line, top, offsets, position) {
+                    let marks_data = csv_lines[marks_line].split(";");
+    
+                    for(let i = 0; i < 16; i++) {
+                        let first_half = i <= 7;
+                        let mark_index = 3 + i;
+                        if(mark_index < marks_data.length && marks_data[mark_index].length < 5) {
+                            let mark = marks_data[mark_index].toUpperCase();
+                            let left = offsets[i] + "%";
+    
+                            switch(mark) {
+                                case "RM":
+                                    mark = first_half ? "R-RIGHT" : "R-LEFT";
+                                break;
+                                case "RD":
+                                    mark = first_half ? "R-LEFT" : "R-RIGHT";
+                                break;
+                            }
+    
+                            botones_cont.append(`
+                                <div class="mark mark-${mark} ${mark === "EI" && position === 'bottom' ? "rot180" : ''}" data-idx="${mark_index}" style="top:${top};left:${left}"></div>
+                            `);
                         }
-
-                        botones_cont.append(`
-                            <div class="mark mark-${mark} ${mark === "EI" && position === 'bottom' ? "rot180" : ''}" data-idx="${mark_index}" style="top:${top};left:${left}"></div>
-                        `);
                     }
                 }
+    
+                
+    
+                generateMarks(header_line + 3, '13.5%', MARKS_OFFSETS_TOP, 'top');
+                generateMarks(header_line + 6, '79%', MARKS_OFFSETS_BOTTOM, 'bottom');
             }
-
             
+            createDiagram('bucal', 41);
+            createDiagram('lingual', 49);
 
-            generateMarks(header_line + 3, '13.5%', MARKS_OFFSETS_TOP, 'top');
-            generateMarks(header_line + 6, '79%', MARKS_OFFSETS_BOTTOM, 'bottom');
+        } else if(csv_lines[csv_lines.length - 2] === 'temporarios') {
 
-            kind === 'temporal-bucal' || kind === 'temporal-lingual'
-            ? box_cont.append($(`<ddiv class="botones-cont hidden"></div>`).append(botones_cont))
-            : box_cont.append($(`<ddiv class="botones-cont"></div>`).append(botones_cont))
+                const MARKS_TEMPORALS_OFFSETS_TOP = [
+                17.5,
+                25.5,
+                33,
+                39,
+                45,
+                50.5,
+                56.5,
+                62.5,
+                70,
+                77.5,
+            ];
+            
+            const MARKS_TEMPORALS_OFFSETS_BOTTOM = [
+                20.5,
+                28.5,
+                35.5,
+                41,
+                45.5,
+                49.5,
+                54,
+                59.5,
+                66.5,
+                74,
+            ];
+
+            function createDiagram(kind, header_line) {
+                let botones_cont = $(`<div class="botones botones-${kind}"></div>`)
+    
+                function generateMarks(marks_line, top, offsets, position) {
+                    let marks_data = csv_lines[marks_line].split(";");
+    
+                    for(let i = 0; i < 10; i++) {
+                        let first_half = i <= 4;
+                        let mark_index = 3 + i;
+                        if(mark_index < marks_data.length && marks_data[mark_index].length < 5) {
+                            let mark = marks_data[mark_index].toUpperCase();
+                            let left = offsets[i] + "%";
+    
+                            switch(mark) {
+                                case "RM":
+                                    mark = first_half ? "R-RIGHT" : "R-LEFT";
+                                break;
+                                case "RD":
+                                    mark = first_half ? "R-LEFT" : "R-RIGHT";
+                                break;
+                            }
+    
+                            botones_cont.append(`
+                                <div class="mark mark-${mark} ${mark === "EI" && position === 'bottom' ? "rot180" : ''}" data-idx="${mark_index}" style="top:${top};left:${left}"></div>
+                            `);
+                        }
+                    }
+                }
+    
+                
+    
+                generateMarks(header_line + 3, '13.5%', MARKS_TEMPORALS_OFFSETS_TOP, 'top');
+                generateMarks(header_line + 6, '79%', MARKS_TEMPORALS_OFFSETS_BOTTOM, 'bottom');
+            }
+            
+            createDiagram('temporal-bucal', 41);
+            createDiagram('temporal-lingual', 49);
+
+        } else {
+            console.log('MSAIDONASDOIASNDISOADNSAOIDNSAIODNSAIODNSAODISANDOIASDEWOUIRYEWUIRYWEIR324895467934659435693456')
+
+            const MARKS_OFFSETS_TOP = [
+                3.8,
+                10.5,
+                17.5,
+                24.2,
+                29,
+                34.3,
+                39.6,
+                45,
+                51,
+                56.2,
+                61.5,
+                67,
+                71.7,
+                78.1,
+                85.5,
+                92
+            ];
+            const MARKS_OFFSETS_BOTTOM = [
+                4.6,
+                12,
+                19.5,
+                26.4,
+                31.7,
+                37,
+                41.7,
+                45.8,
+                50,
+                54.2,
+                58.8,
+                64.2,
+                69.4,
+                76.4,
+                83.8,
+                91.2
+            ];
+            
+            function createDiagram(kind, header_line) {
+                let botones_cont = $(`<div class="botones botones-${kind}"></div>`)
+    
+                function generateMarks(marks_line, top, offsets, position) {
+                    let marks_data = csv_lines[marks_line].split(";");
+    
+                    for(let i = 0; i < 16; i++) {
+                        let first_half = i <= 7;
+                        let mark_index = 3 + i;
+                        if(mark_index < marks_data.length && marks_data[mark_index].length < 5) {
+                            let mark = marks_data[mark_index].toUpperCase();
+                            let left = offsets[i] + "%";
+    
+                            switch(mark) {
+                                case "RM":
+                                    mark = first_half ? "R-RIGHT" : "R-LEFT";
+                                break;
+                                case "RD":
+                                    mark = first_half ? "R-LEFT" : "R-RIGHT";
+                                break;
+                            }
+    
+                            botones_cont.append(`
+                                <div class="mark mark-${mark} ${mark === "EI" && position === 'bottom' ? "rot180" : ''}" data-idx="${mark_index}" style="top:${top};left:${left}"></div>
+                            `);
+                        }
+                    }
+                }
+    
+                
+    
+                generateMarks(header_line + 3, '13.5%', MARKS_OFFSETS_TOP, 'top');
+                generateMarks(header_line + 6, '79%', MARKS_OFFSETS_BOTTOM, 'bottom');
+            }
+            
+            createDiagram('bucal', 41);
+            createDiagram('lingual', 49);
         }
-        
-        createDiagram('bucal', 41);
-        createDiagram('lingual', 49);
-
-        // KIDS ADAPTATION
-
-        createDiagram('temporal-bucal', 41)
-        createDiagram('temporal-lingual', 49)
-
-        // KIDS ADAPTATION
-
 
         box_cont.append(`
             <div class="small-notice">*La ubicación de los botones es de carácter ilustrativo</div>
