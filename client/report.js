@@ -278,7 +278,7 @@ export default (report_xml, report_csv) => {
         let box_cont = $(`
         <div class="box" style="padding-left: 0;padding-right: 0;">
             <div class="title">Botones-Attachments</div>
-            <div class="aclaraciones"><p>${csv_lines[csv_lines.length - 2]}</p></div>
+            <div class="aclaraciones"><p>${csv_lines[csv_lines.length - 3]}</p></div>
         </div>
         `);
 
